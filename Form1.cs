@@ -71,18 +71,6 @@ namespace WinFormsApp8
 
                             Plant plant = new Plant(5, 2, 100, x, y);
 
-                            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-                            timer.Interval = 1000;
-                            timer.Tick += Timer_Tick;
-                            timer.Start();
-
-                            void Timer_Tick(object sender, EventArgs e)
-                            {
-                                // Этот код будет выполняться каждый раз, когда срабатывает таймер
-                                Pea pea = new Pea(1, x, y);
-
-                                peas.Add(pea);
-                            }
                             plants.Add(plant);
                         }
                     };
@@ -99,6 +87,8 @@ namespace WinFormsApp8
             public int SunPrice { get; set; }
             public int X { get; set; }
             public int Y { get; set; }
+
+            private System.Windows.Forms.Timer timer;
             public Plant(int health, int attackPower, int sunPrice, int x, int y)
             {
                 Health = health;
@@ -106,11 +96,16 @@ namespace WinFormsApp8
                 SunPrice = sunPrice;
                 X = x;
                 Y = y;
+
+                timer = new System.Windows.Forms.Timer();
+                timer.Interval = 1000;
+                timer.Tick += Shoot;
+                timer.Start();
             }
 
-            public void Shoot(int x, int y)
+            public void Shoot(object sender, EventArgs e)
             {
-
+                Pea pea = new Pea(1, X+1, Y);
             }
         }
 
@@ -130,16 +125,12 @@ namespace WinFormsApp8
 
                 timer = new System.Windows.Forms.Timer();
                 timer.Interval = 1000;
-                timer.Tick += Timer_Tick;
+                timer.Tick += Move;
                 timer.Start();
             }
-            public void Timer_Tick(object sender, EventArgs e)
+            public void Move(object sender, EventArgs e)
             {
-                Move(X, Y);
-            }
-            public void Move(int x, int y)
-            {
-                X++;
+                X += Speed;
             }
         }
 
