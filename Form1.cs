@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Windows.Forms;
+using static WinFormsApp8.Form1;
 
 namespace WinFormsApp8
 {
@@ -10,7 +11,8 @@ namespace WinFormsApp8
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        List<Plant> plants = new List<Plant>();
+        public void Form1_Load(object sender, EventArgs e)
         {
             int[,] board = new int[9, 5];
 
@@ -79,6 +81,39 @@ namespace WinFormsApp8
                 }
             }
         }
+        
+        public List<Pea> peas = new List<Pea>();
+        public class Pea
+        {
+            public int Speed { get; set; }
+            public int X { get; set; }
+            public int Y { get; set; }
+
+            private System.Windows.Forms.Timer timer;
+            public Pea(int speed, int x, int y)
+            {
+                Speed = speed;
+                X = x + Speed;
+                Y = y;
+
+                timer = new System.Windows.Forms.Timer();
+                timer.Interval = 1000;
+                timer.Tick += Move;
+                timer.Start();
+            }
+            public void Move(object sender, EventArgs e)
+            {
+                X += Speed;
+
+                if (X > 9)
+                {
+                    timer.Stop();
+                    timer.Dispose();
+                    peas.Remove(this);
+                }
+
+            }
+        }
 
         public class Plant
         {
@@ -98,44 +133,17 @@ namespace WinFormsApp8
                 Y = y;
 
                 timer = new System.Windows.Forms.Timer();
-                timer.Interval = 1000;
+                timer.Interval = 3000;
                 timer.Tick += Shoot;
                 timer.Start();
             }
-
             public void Shoot(object sender, EventArgs e)
             {
-                Pea pea = new Pea(1, X+1, Y);
+                Pea pea = new Pea(1, X + 1, Y);
+
+                peas.Add(pea);
             }
         }
-
-        public class Pea
-        {
-            public int Speed { get; set; }
-            public int X { get; set; }
-            public int Y { get; set; }
-
-            private System.Windows.Forms.Timer timer;
-
-            public Pea(int speed, int x, int y)
-            {
-                Speed = speed;
-                X = x + Speed;
-                Y = y;
-
-                timer = new System.Windows.Forms.Timer();
-                timer.Interval = 1000;
-                timer.Tick += Move;
-                timer.Start();
-            }
-            public void Move(object sender, EventArgs e)
-            {
-                X += Speed;
-            }
-        }
-
-        List<Plant> plants = new List<Plant>();
-        List<Pea> peas = new List<Pea>();
 
         // Импорт картиночек
 
